@@ -46,7 +46,7 @@ public class GameClient {
 	
 	private void printResult(int[] result) {
 		System.out.print("[ ");
-		Card repCard = new Card(result[0], result[1]);
+		Card repCard = new Card(result[0], result[1], true);
 		printCard(repCard);
 		
 		if(result[2] == 0) {
@@ -102,62 +102,43 @@ public class GameClient {
 		}
 	}
 	
-	public boolean start() {
-		int pairPlusBet = 0, anteBet = 0, playBet = 0;
-		
-		cardOpen = false;
-		System.out.println("소지금 : " + gamer.getMoney());
-		
-		//초기 베팅
-		anteBet = gamer.getAnteBet();
-		
-		if(anteBet == 0) {
-			System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-			System.out.println("게임을 종료합니다.");
-			System.out.println("소지금 : " + gamer.getMoney());
-			return false;
-		}
-		
-		if(gamer.getMoney() != 0) {
-			pairPlusBet = gamer.getPairPlusBet();
-		}
-		
-//		if(gamer.getMoney() != 0) {
-//			rule.setSixCardBonusBet(gamer.get6CardBonusBet());
-//		}
-		System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-		
-		//카드 배부 및 확인
-			gamer.setHand(dealer.handOutCards());
-			gResult = rule.judge(gamer.getHand());
-			dResult = rule.judge(dealer.getHand());
-			
-		if(gamer.getMoney() != 0) {
-			printHands();
-			System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-
-			//Fold, Play결정
-			playBet = gamer.getPlayBet(anteBet);
-			System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-		}
-		
-		
-		cardOpen = true;
-		printHands();
-		
-		if(playBet != -1) {
-			rule.setWLResult(gResult, dResult);
-			
-			int money = gamer.getMoney() + rule.pay(gResult, dResult, anteBet, playBet, pairPlusBet);
-			gamer.setMoney(money); 
-		}
-		System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-		
-		if(gamer.getMoney() == 0) {
-			System.out.println("소지금을 탕진하셨습니다...");
-			return false;
-		}
-		else 
-			return true;
-	}
+	
+	/*
+	 * public boolean start() { int pairPlusBet = 0, anteBet = 0, playBet = 0;
+	 * 
+	 * cardOpen = false; System.out.println("소지금 : " + gamer.getMoney());
+	 * 
+	 * //초기 베팅 anteBet = gamer.getAnteBet();
+	 * 
+	 * if(anteBet == 0) { System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+	 * System.out.println("게임을 종료합니다."); System.out.println("소지금 : " +
+	 * gamer.getMoney()); return false; }
+	 * 
+	 * if(gamer.getMoney() != 0) { pairPlusBet = gamer.getPairPlusBet(); }
+	 * 
+	 * // if(gamer.getMoney() != 0) { //
+	 * rule.setSixCardBonusBet(gamer.get6CardBonusBet()); // }
+	 * System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+	 * 
+	 * //카드 배부 및 확인 gamer.setHand(dealer.handOutCards()); gResult =
+	 * rule.judge(gamer.getHand()); dResult = rule.judge(dealer.getHand());
+	 * 
+	 * if(gamer.getMoney() != 0) { printHands();
+	 * System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+	 * 
+	 * //Fold, Play결정 playBet = gamer.getPlayBet(anteBet);
+	 * System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"); }
+	 * 
+	 * 
+	 * cardOpen = true; printHands();
+	 * 
+	 * if(playBet != -1) { rule.setWLResult(gResult, dResult);
+	 * 
+	 * int money = gamer.getMoney() + rule.pay(gResult, dResult, anteBet, playBet,
+	 * pairPlusBet); gamer.setMoney(money); }
+	 * System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+	 * 
+	 * if(gamer.getMoney() == 0) { System.out.println("소지금을 탕진하셨습니다..."); return
+	 * false; } else return true; }
+	 */
 }

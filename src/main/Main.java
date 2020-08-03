@@ -12,12 +12,41 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import game.Rule;
+import game.card.Card;
+import game.card.CardDeck;
+import game.players.Dealer;
+import game.players.Gamer;
+
 public class Main {
 	int _pot = 0;
-
+	int phase = 0;
+	int money = 5000;
+	int tempMoney;
+	int anteBet = 0;
+	int pairPlusBet = 0;
+	int playBet = 0;
+	int wins = 0;
+	int loses = 0;
+	int games = 0;
+	double winningRate = 0;
+	int[] gamerResult;
+	int[] dealerResult;
+	String GHandResult;
+	String DHandResult;
+	boolean phaseBet = false;
+	boolean win;
+	CardDeck deck = new CardDeck();
+	Dealer dealer = new Dealer();
+	Gamer gamer = new Gamer();
+	Rule rule = new Rule();
+	
+	ArrayList<Integer> forReplay = new ArrayList<>();
+	
 	private JFrame frmThreeCardPoker;
 
 	/**
@@ -87,35 +116,41 @@ public class Main {
 		chip500.setBounds(12, 340, 100, 100);
 		frmThreeCardPoker.getContentPane().add(chip500);
 
-		JLabel backSide2 = new JLabel("");
-		backSide2.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
-		backSide2.setBounds(549, 96, 130, 198);
-		frmThreeCardPoker.getContentPane().add(backSide2);
+		JLabel lblDCard3 = new JLabel("");
+		lblDCard3.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
+		lblDCard3.setVisible(false);
+		lblDCard3.setBounds(549, 96, 130, 198);
+		frmThreeCardPoker.getContentPane().add(lblDCard3);
 
-		JLabel backSide1 = new JLabel("");
-		backSide1.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
-		backSide1.setBounds(419, 96, 130, 198);
-		frmThreeCardPoker.getContentPane().add(backSide1);
+		JLabel lblDCard2 = new JLabel("");
+		lblDCard2.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
+		lblDCard2.setVisible(false);
+		lblDCard2.setBounds(419, 96, 130, 198);
+		frmThreeCardPoker.getContentPane().add(lblDCard2);
 
-		JLabel backSide = new JLabel("");
-		backSide.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
-		backSide.setBounds(289, 96, 130, 198);
-		frmThreeCardPoker.getContentPane().add(backSide);
+		JLabel lblDCard1 = new JLabel("");
+		lblDCard1.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
+		lblDCard1.setVisible(false);
+		lblDCard1.setBounds(289, 96, 130, 198);
+		frmThreeCardPoker.getContentPane().add(lblDCard1);
 
-		JLabel QS = new JLabel("");
-		QS.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/QS.png")));
-		QS.setBounds(549, 386, 130, 198);
-		frmThreeCardPoker.getContentPane().add(QS);
+		JLabel lblGCard3 = new JLabel("");
+		lblGCard3.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/QS.png")));
+		lblGCard3.setVisible(false);
+		lblGCard3.setBounds(549, 386, 130, 198);
+		frmThreeCardPoker.getContentPane().add(lblGCard3);
 
-		JLabel KS = new JLabel("");
-		KS.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/KS.png")));
-		KS.setBounds(419, 386, 130, 198);
-		frmThreeCardPoker.getContentPane().add(KS);
+		JLabel lblGCard2 = new JLabel("");
+		lblGCard2.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/KS.png")));
+		lblGCard2.setVisible(false);
+		lblGCard2.setBounds(419, 386, 130, 198);
+		frmThreeCardPoker.getContentPane().add(lblGCard2);
 
-		JLabel AS = new JLabel("");
-		AS.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/AS.png")));
-		AS.setBounds(289, 386, 130, 198);
-		frmThreeCardPoker.getContentPane().add(AS);
+		JLabel lblGCard1 = new JLabel("");
+		lblGCard1.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/AS.png")));
+		lblGCard1.setVisible(false);
+		lblGCard1.setBounds(289, 386, 130, 198);
+		frmThreeCardPoker.getContentPane().add(lblGCard1);
 
 		JButton btnQuit = new JButton("Quit");
 		btnQuit.setBounds(808, 561, 97, 23);
@@ -136,10 +171,10 @@ public class Main {
 		panelPot.setBounds(12, 450, 105, 23);
 		frmThreeCardPoker.getContentPane().add(panelPot);
 
-		JLabel pot = new JLabel("0");
-		pot.setFont(new Font("Arial", Font.PLAIN, 12));
-		pot.setHorizontalAlignment(SwingConstants.CENTER);
-		panelPot.add(pot);
+		JLabel lblPot = new JLabel("0");
+		lblPot.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblPot.setHorizontalAlignment(SwingConstants.CENTER);
+		panelPot.add(lblPot);
 
 		JPanel panelPlayer1 = new JPanel();
 		panelPlayer1.setBackground(new Color(0, 255, 0));
@@ -168,13 +203,13 @@ public class Main {
 		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 12));
 		panelAnte.add(lblNewLabel_2);
 
-		JPanel panelAnteNum = new JPanel();
-		panelAnteNum.setBounds(124, 153, 105, 23);
-		frmThreeCardPoker.getContentPane().add(panelAnteNum);
+		JPanel panelAnteBoard = new JPanel();
+		panelAnteBoard.setBounds(124, 153, 105, 23);
+		frmThreeCardPoker.getContentPane().add(panelAnteBoard);
 
-		JLabel lblNewLabel_3 = new JLabel("0");
-		lblNewLabel_3.setFont(new Font("Arial", Font.PLAIN, 12));
-		panelAnteNum.add(lblNewLabel_3);
+		JLabel lblAnteBoard = new JLabel("0");
+		lblAnteBoard.setFont(new Font("Arial", Font.PLAIN, 12));
+		panelAnteBoard.add(lblAnteBoard);
 
 		JPanel panelPairPlus = new JPanel();
 		panelPairPlus.setBackground(new Color(0, 255, 0));
@@ -185,13 +220,13 @@ public class Main {
 		lblNewLabel_4.setFont(new Font("Arial", Font.PLAIN, 12));
 		panelPairPlus.add(lblNewLabel_4);
 
-		JPanel panelPairPlusNum = new JPanel();
-		panelPairPlusNum.setBounds(124, 219, 105, 23);
-		frmThreeCardPoker.getContentPane().add(panelPairPlusNum);
+		JPanel panelPairPlusBoard = new JPanel();
+		panelPairPlusBoard.setBounds(124, 219, 105, 23);
+		frmThreeCardPoker.getContentPane().add(panelPairPlusBoard);
 
-		JLabel lblNewLabel_5 = new JLabel("0");
-		lblNewLabel_5.setFont(new Font("Arial", Font.PLAIN, 12));
-		panelPairPlusNum.add(lblNewLabel_5);
+		JLabel lblPairPlusBoard = new JLabel("0");
+		lblPairPlusBoard.setFont(new Font("Arial", Font.PLAIN, 12));
+		panelPairPlusBoard.add(lblPairPlusBoard);
 
 		JPanel panelPlay = new JPanel();
 		panelPlay.setBackground(new Color(0, 255, 0));
@@ -202,13 +237,13 @@ public class Main {
 		lblNewLabel_6.setFont(new Font("Arial", Font.PLAIN, 12));
 		panelPlay.add(lblNewLabel_6);
 
-		JPanel panelPlayNum = new JPanel();
-		panelPlayNum.setBounds(124, 285, 105, 23);
-		frmThreeCardPoker.getContentPane().add(panelPlayNum);
+		JPanel panelPlayBoard = new JPanel();
+		panelPlayBoard.setBounds(124, 285, 105, 23);
+		frmThreeCardPoker.getContentPane().add(panelPlayBoard);
 
-		JLabel lblNewLabel_7 = new JLabel("0");
-		lblNewLabel_7.setFont(new Font("Arial", Font.PLAIN, 12));
-		panelPlayNum.add(lblNewLabel_7);
+		JLabel lblPlayBoard = new JLabel("0");
+		lblPlayBoard.setFont(new Font("Arial", Font.PLAIN, 12));
+		panelPlayBoard.add(lblPlayBoard);
 
 		JButton btnCommit = new JButton("Commit");
 		btnCommit.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -228,62 +263,63 @@ public class Main {
 		panelBankBoard.setBounds(800, 43, 105, 23);
 		frmThreeCardPoker.getContentPane().add(panelBankBoard);
 
-		JLabel lblBankBoard = new JLabel("0");
+		JLabel lblBankBoard = new JLabel(Integer.toString(money));
 		lblBankBoard.setFont(new Font("Arial", Font.PLAIN, 12));
 		panelBankBoard.add(lblBankBoard);
 		
 		JButton btnFold = new JButton("Fold");
 		btnFold.setFont(new Font("Arial", Font.PLAIN, 12));
-		btnFold.setBounds(755, 96, 105, 23);
+		btnFold.setBounds(755, 129, 105, 23);
 		frmThreeCardPoker.getContentPane().add(btnFold);
 		
 		JButton btnPlay = new JButton("Play");
-		btnPlay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		btnPlay.setFont(new Font("Arial", Font.PLAIN, 12));
-		btnPlay.setBounds(755, 129, 105, 23);
+		btnPlay.setBounds(755, 162, 105, 23);
 		frmThreeCardPoker.getContentPane().add(btnPlay);
+		
+		JButton btnStart = new JButton("Game Start");
+		btnStart.setFont(new Font("Arial", Font.PLAIN, 12));
+		btnStart.setBounds(755, 96, 105, 23);
+		frmThreeCardPoker.getContentPane().add(btnStart);
 		
 		JPanel panelHelper = new JPanel();
 		panelHelper.setBounds(354, 298, 265, 32);
 		frmThreeCardPoker.getContentPane().add(panelHelper);
 		
-		JLabel lblHelper = new JLabel("Helper");
+		JLabel lblHelper = new JLabel("Press Start");
 		panelHelper.add(lblHelper);
 		
 		JPanel panelDealerHandBoard = new JPanel();
-		panelDealerHandBoard.setBounds(755, 239, 113, 23);
+		panelDealerHandBoard.setBounds(755, 239, 150, 23);
 		frmThreeCardPoker.getContentPane().add(panelDealerHandBoard);
 		
-		JLabel lblDealerHandBoard = new JLabel("Straight Flush");
+		JLabel lblDealerHandBoard = new JLabel("");
 		lblDealerHandBoard.setFont(new Font("Arial", Font.PLAIN, 12));
 		panelDealerHandBoard.add(lblDealerHandBoard);
 		
 		JPanel panelDealerHand = new JPanel();
 		panelDealerHand.setBackground(Color.GREEN);
-		panelDealerHand.setBounds(755, 206, 113, 23);
+		panelDealerHand.setBounds(755, 206, 150, 23);
 		frmThreeCardPoker.getContentPane().add(panelDealerHand);
 		
-		JLabel lblDealerHand = new JLabel("Dealer");
+		JLabel lblDealerHand = new JLabel("Dealer Hand");
 		lblDealerHand.setFont(new Font("Arial", Font.PLAIN, 12));
 		panelDealerHand.add(lblDealerHand);
 		
 		JPanel panelGamerHandBoard = new JPanel();
-		panelGamerHandBoard.setBounds(755, 307, 113, 23);
+		panelGamerHandBoard.setBounds(755, 307, 150, 23);
 		frmThreeCardPoker.getContentPane().add(panelGamerHandBoard);
 		
-		JLabel lblGamerHandBoard = new JLabel("High");
+		JLabel lblGamerHandBoard = new JLabel("");
 		lblGamerHandBoard.setFont(new Font("Arial", Font.PLAIN, 12));
 		panelGamerHandBoard.add(lblGamerHandBoard);
 		
 		JPanel panelGamerHand = new JPanel();
 		panelGamerHand.setBackground(Color.GREEN);
-		panelGamerHand.setBounds(755, 274, 113, 23);
+		panelGamerHand.setBounds(755, 274, 150, 23);
 		frmThreeCardPoker.getContentPane().add(panelGamerHand);
 		
-		JLabel lblGamerHand = new JLabel("Gamer");
+		JLabel lblGamerHand = new JLabel("Gamer Hand");
 		lblGamerHand.setFont(new Font("Arial", Font.PLAIN, 12));
 		panelGamerHand.add(lblGamerHand);
 		
@@ -350,69 +386,517 @@ public class Main {
 		lblStatistics.setFont(new Font("Arial", Font.PLAIN, 12));
 		panelStatistics.add(lblStatistics);
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(Main.class.getResource("/img/logo.png")));
-		lblNewLabel_1.setBounds(338, 173, 300, 300);
-		frmThreeCardPoker.getContentPane().add(lblNewLabel_1);
-
-		// btnActionListener
-		ArrayList<Integer> forReplay = new ArrayList<>();
+		JLabel lblBackgroundLogo = new JLabel("");
+		lblBackgroundLogo.setIcon(new ImageIcon(Main.class.getResource("/img/logo.png")));
+		lblBackgroundLogo.setBounds(338, 173, 300, 300);
+		frmThreeCardPoker.getContentPane().add(lblBackgroundLogo);
+		
 		forReplay.add(0, 0);
-
+		
+		//5$ chip
 		chip5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				_pot += 5;
-				forReplay.add(_pot);
-				pot.setText(Integer.toString(_pot));
+				if(phaseBet) {
+					if(tempMoney >= 5) {
+						_pot += 5;
+						tempMoney = money - _pot;
+						forReplay.add(_pot);
+						lblPot.setText(Integer.toString(_pot));
+						lblBankBoard.setText(Integer.toString(tempMoney));
+					}
+				}
 			}
 		});
+		
+		//25$ chip
 		chip25.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				_pot += 25;
-				forReplay.add(_pot);
-				pot.setText(Integer.toString(_pot));
+				if(phaseBet) {
+					if(tempMoney >= 25) {
+						_pot += 25;
+						tempMoney = money - _pot;
+						forReplay.add(_pot);
+						lblPot.setText(Integer.toString(_pot));
+						lblBankBoard.setText(Integer.toString(tempMoney));
+					}
+				}
+				
 			}
 		});
+		
+		//100$ chip
 		chip100.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				_pot += 100;
-				forReplay.add(_pot);
-				pot.setText(Integer.toString(_pot));
+				if(phaseBet) {
+					if(tempMoney >= 100) {
+						_pot += 100;
+						tempMoney = money - _pot;
+						forReplay.add(_pot);
+						lblPot.setText(Integer.toString(_pot));
+						lblBankBoard.setText(Integer.toString(tempMoney));
+					}
+				}
 			}
 		});
+		
+		//500$ chip
 		chip500.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				_pot += 500;
-				forReplay.add(_pot);
-				pot.setText(Integer.toString(_pot));
+				if(phaseBet) {
+					if(tempMoney >= 500) {
+						_pot += 500;
+						tempMoney = money - _pot;
+						forReplay.add(_pot);
+						lblPot.setText(Integer.toString(_pot));
+						lblBankBoard.setText(Integer.toString(tempMoney));
+					}
+				}
 			}
 		});
+		
+		//Reset Bet
 		btnResetBet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				forReplay.add(_pot);
-				_pot = 0;
-				pot.setText(Integer.toString(_pot));
+				if(phaseBet) {
+					forReplay.add(_pot);
+					_pot = 0;
+					tempMoney = money - _pot;
+					lblPot.setText(Integer.toString(_pot));
+					lblBankBoard.setText(Integer.toString(tempMoney));
+				}
 			}
 		});
+		
+		//Replay Bet
 		btnReplayBet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(forReplay.size() > 1) {
-					_pot = forReplay.get(forReplay.size() - 2);
-					forReplay.remove(forReplay.size() - 1);
-					pot.setText(Integer.toString(_pot));
-				}
-				else {
-					_pot = 0;
-					pot.setText(Integer.toString(_pot));
+				if(phaseBet) {
+					if(forReplay.size() > 1) {
+						_pot = forReplay.get(forReplay.size() - 2);
+						tempMoney = money - _pot;
+						forReplay.remove(forReplay.size() - 1);
+						lblPot.setText(Integer.toString(_pot));
+						lblBankBoard.setText(Integer.toString(tempMoney));
+					}
+					else {
+						_pot = 0;
+						tempMoney = money - _pot;
+						lblPot.setText(Integer.toString(_pot));
+						lblBankBoard.setText(Integer.toString(tempMoney));
+					}
 				}
 			}
 		});
+		
+		panelPlayer0.setVisible(false);
+		panelPlayer1.setVisible(false);
+		
+		//Game Start
+		btnStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(phase == 0) {
+					anteBet = 0;
+					pairPlusBet = 0;
+					playBet = 0;
+					
+					lblDCard1.setVisible(false);
+					lblDCard2.setVisible(false);
+					lblDCard3.setVisible(false);
+					
+					lblGCard1.setVisible(false);
+					lblGCard2.setVisible(false);
+					lblGCard3.setVisible(false);
+					
+					games++;
+					System.out.println(games);
+					System.out.println(wins);
+					System.out.println(loses);
+					lblHelper.setText("Input Ante Bet");
+					phaseBet = true;
+					tempMoney = money;
+					phase = 1;
+				}
+			}
+		});
+		
+		//Quit
 		btnQuit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmThreeCardPoker.dispose();
 			}
 		});
-
+		
+		//commit
+		btnCommit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(phase == 1) {
+					anteBet = _pot;
+					money = tempMoney;
+					lblAnteBoard.setText(Integer.toString(anteBet));
+					_pot = 0;
+					lblPot.setText(Integer.toString(_pot));
+					
+					forReplay = new ArrayList<>();
+					forReplay.add(0,0);
+					
+					if(anteBet > 0) {
+						lblHelper.setText("Input Pair+ Bet");
+						phase = 2;
+					}
+					
+					if(money == 0) {
+						panelPlayer0.setVisible(true);
+						panelPlayer1.setVisible(true);
+						
+						gamer.setHand(dealer.handOutCards());
+						
+						//핸드랭크 출력
+						gamerResult = rule.judge(gamer.getHand());
+						dealerResult = rule.judge(dealer.getHand());
+						
+						lblGamerHandBoard.setText(getStringResult(gamerResult));
+						
+						//카드 출력
+						lblDCard1.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
+						lblDCard2.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
+						lblDCard3.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
+						
+						lblDCard1.setVisible(true);
+						lblDCard2.setVisible(true);
+						lblDCard3.setVisible(true);
+						
+						lblGCard1.setIcon(new ImageIcon(Main.class.getResource(getCardID(gamer.getHand()[0]))));
+						lblGCard2.setIcon(new ImageIcon(Main.class.getResource(getCardID(gamer.getHand()[1]))));
+						lblGCard3.setIcon(new ImageIcon(Main.class.getResource(getCardID(gamer.getHand()[2]))));
+						
+						lblGCard1.setVisible(true);
+						lblGCard2.setVisible(true);
+						lblGCard3.setVisible(true);
+						
+						lblHelper.setText("Fold or Play");
+						phaseBet = false;
+						
+						//카드출력
+						lblDCard1.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[0]))));
+						lblDCard2.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[1]))));
+						lblDCard3.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[2]))));
+						
+						lblDealerHandBoard.setText(getStringResult(dealerResult));
+						
+						rule.setWLResult(gamerResult, dealerResult);
+						win = rule.getWin();
+						
+						if(win) {
+							lblHelper.setText("You Won! Press Start");
+							wins++;
+						}
+						else {
+							lblHelper.setText("You Lost Press Start");
+							loses++;
+						}
+						
+						money += rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
+						lblBankBoard.setText(Integer.toString(money));
+						
+						if(money == 0) {
+							JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
+							frmThreeCardPoker.dispose();
+						}
+						
+						lblAnteBoard.setText("0");
+						lblPairPlusBoard.setText("0");
+						lblPlayBoard.setText("0");
+						
+						lblWinsBoard.setText(Integer.toString(wins));
+						lblLosesBoard.setText(Integer.toString(loses));
+						
+						winningRate = (double)wins / (double)games * 100;
+						lblWinningRateBoard.setText(Double.toString(Math.round(winningRate * 10) / 10.0));
+						System.out.println(winningRate);
+						
+						phase = 0;
+					}
+				}
+				else if(phase == 2) {
+					pairPlusBet = _pot;
+					money = tempMoney;
+					lblPairPlusBoard.setText(Integer.toString(pairPlusBet));
+					_pot = 0;
+					lblPot.setText(Integer.toString(_pot));
+					
+					forReplay = new ArrayList<>();
+					forReplay.add(0,0);
+					
+					panelPlayer0.setVisible(true);
+					panelPlayer1.setVisible(true);
+					
+					gamer.setHand(dealer.handOutCards());
+					
+					//핸드랭크 출력
+					gamerResult = rule.judge(gamer.getHand());
+					dealerResult = rule.judge(dealer.getHand());
+					
+					lblGamerHandBoard.setText(getStringResult(gamerResult));
+					
+					//카드 출력
+					lblDCard1.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
+					lblDCard2.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
+					lblDCard3.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
+					
+					lblDCard1.setVisible(true);
+					lblDCard2.setVisible(true);
+					lblDCard3.setVisible(true);
+					
+					lblGCard1.setIcon(new ImageIcon(Main.class.getResource(getCardID(gamer.getHand()[0]))));
+					lblGCard2.setIcon(new ImageIcon(Main.class.getResource(getCardID(gamer.getHand()[1]))));
+					lblGCard3.setIcon(new ImageIcon(Main.class.getResource(getCardID(gamer.getHand()[2]))));
+					
+					lblGCard1.setVisible(true);
+					lblGCard2.setVisible(true);
+					lblGCard3.setVisible(true);
+					
+					lblHelper.setText("Fold or Play");
+					phaseBet = false;
+					phase = 3;
+					
+					if(money == 0) {
+						//카드출력
+						lblDCard1.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[0]))));
+						lblDCard2.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[1]))));
+						lblDCard3.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[2]))));
+						
+						lblDealerHandBoard.setText(getStringResult(dealerResult));
+						
+						rule.setWLResult(gamerResult, dealerResult);
+						win = rule.getWin();
+						
+						if(win) {
+							lblHelper.setText("You Won! Press Start");
+							wins++;
+						}
+						else {
+							lblHelper.setText("You Lost Press Start");
+							loses++;
+						}
+						
+						money += rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
+						lblBankBoard.setText(Integer.toString(money));
+						
+						if(money == 0) {
+							JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
+							frmThreeCardPoker.dispose();
+						}
+						
+						lblAnteBoard.setText("0");
+						lblPairPlusBoard.setText("0");
+						lblPlayBoard.setText("0");
+						
+						lblWinsBoard.setText(Integer.toString(wins));
+						lblLosesBoard.setText(Integer.toString(loses));
+						
+						winningRate = (double)wins / (double)games * 100;
+						lblWinningRateBoard.setText(Double.toString(Math.round(winningRate * 10) / 10.0));
+						System.out.println(winningRate);
+						
+						phase = 0;
+					}
+				}
+			}
+		});
+		
+		//Fold
+		btnFold.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(phase == 3) {
+					lblDCard1.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[0]))));
+					lblDCard2.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[1]))));
+					lblDCard3.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[2]))));
+					
+					lblDealerHandBoard.setText(getStringResult(dealerResult));
+					
+					lblHelper.setText("You Folded Press Start");
+					
+					lblAnteBoard.setText("0");
+					lblPairPlusBoard.setText("0");
+					lblPlayBoard.setText("0");
+					
+					loses += 1;
+					lblLosesBoard.setText(Integer.toString(loses));
+					
+					winningRate = (double)wins / (double)games * 100;
+					lblWinningRateBoard.setText(Double.toString(Math.round(winningRate * 10) / 10.0));
+					System.out.println(winningRate);
+					
+					if(money == 0) {
+						JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
+						frmThreeCardPoker.dispose();
+					}
+					phase = 0;
+				}
+			}
+		});
+		
+		//Play
+		btnPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(phase == 3) {
+					if(anteBet >= 0) {
+						money -= anteBet;
+						playBet = anteBet;
+						lblBankBoard.setText(Integer.toString(money));
+						lblPlayBoard.setText(Integer.toString(playBet));
+					}
+					else {
+						playBet = money;
+						money = 0;
+						lblBankBoard.setText(Integer.toString(money));
+						lblPlayBoard.setText(Integer.toString(playBet));
+					}
+					
+					//카드출력
+					lblDCard1.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[0]))));
+					lblDCard2.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[1]))));
+					lblDCard3.setIcon(new ImageIcon(Main.class.getResource(getCardID(dealer.getHand()[2]))));
+					
+					lblDealerHandBoard.setText(getStringResult(dealerResult));
+					
+					rule.setWLResult(gamerResult, dealerResult);
+					win = rule.getWin();
+					
+					if(win) {
+						lblHelper.setText("You Won! Press Start");
+						wins++;
+					}
+					else {
+						lblHelper.setText("You Lost Press Start");
+						loses++;
+					}
+					
+					money += rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
+					lblBankBoard.setText(Integer.toString(money));
+					
+					if(money == 0) {
+						JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
+						frmThreeCardPoker.dispose();
+					}
+					
+					lblAnteBoard.setText("0");
+					lblPairPlusBoard.setText("0");
+					lblPlayBoard.setText("0");
+					
+					lblWinsBoard.setText(Integer.toString(wins));
+					lblLosesBoard.setText(Integer.toString(loses));
+					
+					winningRate = (double)wins / (double)games * 100;
+					lblWinningRateBoard.setText(Double.toString(Math.round(winningRate * 10) / 10.0));
+					System.out.println(winningRate);
+					
+					phase = 0;
+					
+				}
+			}
+		});
+		
 		frmThreeCardPoker.setResizable(false);
+	}
+	
+	private String getStringResult(int[] result) {
+		String forReturn = null;
+		
+		//number
+		if(result[1] == 14) {
+			forReturn = "A";
+		}
+		else if(result[1] == 13) {
+			forReturn = "K";
+		}
+		else if(result[1] == 12) {
+			forReturn = "Q";
+		}
+		else if(result[1] == 11) {
+			forReturn = "J";
+		}
+		else {
+			forReturn = Integer.toString(result[1]);
+		}
+		
+		//shape
+		if(result[0] == 3) {
+			forReturn += "S";
+		}
+		else if(result[0] == 2) {
+			forReturn += "D";
+		}
+		else if(result[0] == 1) {
+			forReturn += "H";
+		}
+		else {
+			forReturn += "C";
+		}
+		forReturn += " ";
+		
+		//rank
+		if(result[2] == 0) {
+			forReturn += "High Card";
+		}
+		else if(result[2] == 1) {
+			forReturn += "One Pair";
+		}
+		else if(result[2] == 2) {
+			forReturn += "Flush";
+		}
+		else if(result[2] == 3) {
+			forReturn += "Straight";
+		}
+		else if(result[2] == 4) {
+			forReturn += "Three of Kind";
+		}
+		else {
+			forReturn += "Straight Flush";
+		}
+		
+		return forReturn;
+	}
+	
+	private String getCardID(Card card) {
+		int shape = card.getShape();
+		int number = card.getNumber();
+		
+		String forReturn = "/img/playing_cards/";
+		
+		if(number == 14) {
+			forReturn += "A";
+		}
+		else if(number == 13) {
+			forReturn += "K";
+		}
+		else if(number == 12) {
+			forReturn += "Q";
+		}
+		else if(number == 11) {
+			forReturn += "J";
+		}
+		else {
+			forReturn += Integer.toString(number);
+		}
+		
+		switch(shape) {
+		case 3:
+			forReturn += "S";
+			break;
+		case 2:
+			forReturn += "D";
+			break;
+		case 1:
+			forReturn += "H";
+			break;
+		case 0:
+			forReturn += "C";
+			break;
+		}
+		
+		forReturn += ".png";
+		
+		return forReturn;
 	}
 }

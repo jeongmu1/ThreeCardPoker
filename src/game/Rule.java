@@ -9,91 +9,34 @@ public class Rule {
 		int pot = 0;
 		
 		if(win) {
-			System.out.print("승리하셨습니다!");
+			//딜러 Nothing
 			if(dResult[2] == 0 && dResult[1] < 12) {
-				System.out.println("딜러의 패가 No Hand이므로 Ante의 1배만 지급합니다. (상금 : " + anteBet + ")");
 				pot += anteBet * 2 + playBet;
 			}
+			//평소
 			else {
-				System.out.print(" (상금 : " + (anteBet + playBet) + ")\n");
 				pot += anteBet * 2 + playBet * 2;
 			}
 		}
-		else {
-			System.out.println("패배하셨습니다.");
-		}
 		
 		if(gResult[2] == 5) {
-			if(pairPlusBet != 0) System.out.println("Straight Flush에 대한 Pair Plus 배당금 " + pairPlusBet * 40 + "지급 (배당률 : 40)");
-			System.out.println("Straight Flush에 대한 Ante 보너스 " + anteBet * 5 + "지급 (배당률 : 5)");
 			pot += pairPlusBet * 41 + anteBet * 5;
 		}
 		else if(gResult[2] == 4) {
-			if(pairPlusBet != 0) System.out.println("Three of Kind에 대한 Pair Plus 배당금 " + pairPlusBet * 30 + "지급 (배당률 : 30)");
-			System.out.println("Three of Kind에 대한 Ante 보너스 " + anteBet * 4 + "지급 (배당률 : 4)");
 			pot += pairPlusBet * 31 + anteBet * 4;
 		}
 		else if(gResult[2] == 3) {
-			if(pairPlusBet != 0) System.out.println("Straight에 대한 Pair Plus 배당금 " + pairPlusBet * 6 + "지급 (배당률 : 6)");
-			System.out.println("Straight에 대한 Ante 보너스 " + anteBet * 1 + "지급 (배당률 : 1)");
 			pot += pairPlusBet * 7 + anteBet * 1;
 		}
 		else if(gResult[2] == 2) {
-			if(pairPlusBet != 0) System.out.println("Flush에 대한 Pair Plus 배당금 " + pairPlusBet * 4 + "지급 (배당률 : 4)");
 			pot += pairPlusBet * 5;
 		}
 		else if(gResult[2] == 1) {
-			if(pairPlusBet != 0) System.out.println("One Pair에 대한 Pair Plus 배당금 " + pairPlusBet * 1 + "지급 (배당률 : 1)");
 			pot += pairPlusBet * 2;
 		}
 		
 		return pot;
 	}
-	
-	/*
-	 * 6카드보너스
-	 * 
-	 * public int judge6Cards(Card[] gHand, Card[] dHand) { Card[] allHand = new
-	 * Card[6]; for(int i = 0; i < 3; i++) { allHand[i] = gHand[i]; allHand[i+3] =
-	 * dHand[i]; }
-	 * 
-	 * if(searchSame(allHand, 3)) { if(searchSame(allHand, 4)) { return 5; } else
-	 * if(searchFullHouse(allHand)) { return 4; } else { return 1; }
-	 * 
-	 * }
-	 * 
-	 * 
-	 * 
-	 * return 0; }
-	 * 
-	 * private boolean searchFullHouse(Card[] allHand) {
-	 * 
-	 * }
-	 * 
-	 * private boolean[] searchStraight(Card[] allHand) { List<Card> list = new
-	 * ArrayList<Card>(); for(int i = 0; i < allHand.length; i++) {
-	 * list.add(allHand[i]); }
-	 * 
-	 * for(int i = 0; i < list.size(); i++) { Card marker = list.get(i); for(int j =
-	 * i; j < list.size(); j++) {
-	 * 
-	 * } }
-	 * 
-	 * return ; }
-	 * 
-	 * 
-	 * private boolean searchSame(Card[] allHand, int n) { Card[] arr = new Card[n];
-	 * 
-	 * for(int i = 0; i < allHand.length; i++) { for(int a = 0; a < n; a++) { arr[a]
-	 * = null; }
-	 * 
-	 * arr[0] = allHand[i]; int count = 0; for(int j = i; j < allHand.length; j++) {
-	 * if(arr[0] == arr[j]) { arr[count] = arr[j]; count++; } }
-	 * 
-	 * if(arr[n - 1] != null) { return true; } }
-	 * 
-	 * return false; }
-	 */
 	
 	public int[] judge(Card[] player) {
 		//리턴할 배열의 형식 { 대표카드 문양, 대표카드 숫자, 랭크 }
@@ -178,6 +121,10 @@ public class Rule {
 			else win = false;
 		}
 		else win = false;
+	}
+	
+	public boolean getWin() {
+		return this.win;
 	}
 	
 	private int rank(Card[] player) {
