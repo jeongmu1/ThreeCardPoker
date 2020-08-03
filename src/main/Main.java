@@ -499,6 +499,15 @@ public class Main {
 					pairPlusBet = 0;
 					playBet = 0;
 					
+					lblAnteBoard.setText("0");
+					lblPairPlusBoard.setText("0");
+					lblPlayBoard.setText("0");
+					
+					lblDealerHandBoard.setText("");
+					lblGamerHandBoard.setText("");
+					panelPlayer0.setVisible(false);
+					panelPlayer1.setVisible(false);
+					
 					lblDCard1.setVisible(false);
 					lblDCard2.setVisible(false);
 					lblDCard3.setVisible(false);
@@ -779,10 +788,6 @@ public class Main {
 						JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
 						frmThreeCardPoker.dispose();
 					}
-					
-					lblAnteBoard.setText("0");
-					lblPairPlusBoard.setText("0");
-					lblPlayBoard.setText("0");
 					
 					lblWinsBoard.setText(Integer.toString(wins));
 					lblLosesBoard.setText(Integer.toString(loses));
