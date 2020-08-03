@@ -167,7 +167,7 @@ public class Main {
 		frmThreeCardPoker.getContentPane().add(btnReplayBet);
 
 		JPanel panelPot = new JPanel();
-		panelPot.setBackground(new Color(0, 255, 0));
+		panelPot.setBackground(Color.WHITE);
 		panelPot.setBounds(12, 450, 105, 23);
 		frmThreeCardPoker.getContentPane().add(panelPot);
 
@@ -598,7 +598,7 @@ public class Main {
 						money += rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
 						lblBankBoard.setText(Integer.toString(money));
 						
-						if(money == 0) {
+						if(money <= 0) {
 							JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
 							frmThreeCardPoker.dispose();
 						}
@@ -682,7 +682,7 @@ public class Main {
 						money += rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
 						lblBankBoard.setText(Integer.toString(money));
 						
-						if(money == 0) {
+						if(money <= 0) {
 							JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
 							frmThreeCardPoker.dispose();
 						}
@@ -727,7 +727,7 @@ public class Main {
 					lblWinningRateBoard.setText(Double.toString(Math.round(winningRate * 10) / 10.0));
 					System.out.println(winningRate);
 					
-					if(money == 0) {
+					if(money <= 0) {
 						JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
 						frmThreeCardPoker.dispose();
 					}
@@ -740,7 +740,7 @@ public class Main {
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(phase == 3) {
-					if(anteBet >= 0) {
+					if(money - anteBet >= 0) {
 						money -= anteBet;
 						playBet = anteBet;
 						lblBankBoard.setText(Integer.toString(money));
@@ -775,7 +775,7 @@ public class Main {
 					money += rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
 					lblBankBoard.setText(Integer.toString(money));
 					
-					if(money == 0) {
+					if(money <= 0) {
 						JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
 						frmThreeCardPoker.dispose();
 					}
