@@ -83,7 +83,8 @@ public class Main {
 		frmThreeCardPoker.setTitle("Three Card Poker");
 		frmThreeCardPoker.setIconImage(
 				Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/img/logo.png")));
-		frmThreeCardPoker.setBounds(100, 100, 936, 638);
+		frmThreeCardPoker.setBounds(0, 0, 936, 638);
+		frmThreeCardPoker.setLocationRelativeTo(null);
 		frmThreeCardPoker.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmThreeCardPoker.getContentPane().setLayout(null);
 		frmThreeCardPoker.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
