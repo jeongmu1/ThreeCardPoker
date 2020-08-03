@@ -117,37 +117,31 @@ public class Main {
 		frmThreeCardPoker.getContentPane().add(chip500);
 
 		JLabel lblDCard3 = new JLabel("");
-		lblDCard3.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
 		lblDCard3.setVisible(false);
 		lblDCard3.setBounds(549, 96, 130, 198);
 		frmThreeCardPoker.getContentPane().add(lblDCard3);
 
 		JLabel lblDCard2 = new JLabel("");
-		lblDCard2.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
 		lblDCard2.setVisible(false);
 		lblDCard2.setBounds(419, 96, 130, 198);
 		frmThreeCardPoker.getContentPane().add(lblDCard2);
 
 		JLabel lblDCard1 = new JLabel("");
-		lblDCard1.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/gray_back.png")));
 		lblDCard1.setVisible(false);
 		lblDCard1.setBounds(289, 96, 130, 198);
 		frmThreeCardPoker.getContentPane().add(lblDCard1);
 
 		JLabel lblGCard3 = new JLabel("");
-		lblGCard3.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/QS.png")));
 		lblGCard3.setVisible(false);
 		lblGCard3.setBounds(549, 386, 130, 198);
 		frmThreeCardPoker.getContentPane().add(lblGCard3);
 
 		JLabel lblGCard2 = new JLabel("");
-		lblGCard2.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/KS.png")));
 		lblGCard2.setVisible(false);
 		lblGCard2.setBounds(419, 386, 130, 198);
 		frmThreeCardPoker.getContentPane().add(lblGCard2);
 
 		JLabel lblGCard1 = new JLabel("");
-		lblGCard1.setIcon(new ImageIcon(Main.class.getResource("/img/playing_cards/AS.png")));
 		lblGCard1.setVisible(false);
 		lblGCard1.setBounds(289, 386, 130, 198);
 		frmThreeCardPoker.getContentPane().add(lblGCard1);
@@ -729,7 +723,7 @@ public class Main {
 					lblPairPlusBoard.setText("0");
 					lblPlayBoard.setText("0");
 					
-					loses += 1;
+					loses++;
 					lblLosesBoard.setText(Integer.toString(loses));
 					
 					winningRate = (double)wins / (double)games * 100;
