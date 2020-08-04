@@ -10,7 +10,7 @@ public class CardDeck {
 		int count = 0;
 		for(int i = 0; i < 4; i++) {
 			for(int j = 2; j < 15; j++) {
-				cardDeck[count] = new Card(i, j, false);
+				cardDeck[count] = new Card(i, j);
 				count++;
 			}
 		}
