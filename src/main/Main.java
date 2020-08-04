@@ -14,6 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import game.Rule;
@@ -386,6 +388,12 @@ public class Main {
 		lblBackgroundLogo.setBounds(338, 173, 300, 300);
 		frmThreeCardPoker.getContentPane().add(lblBackgroundLogo);
 		
+		JTextArea txtLog = new JTextArea();
+		JScrollPane scrollPane = new JScrollPane(txtLog);
+		txtLog.setEditable(false);
+		scrollPane.setBounds(124, 18, 283, 68);
+		frmThreeCardPoker.getContentPane().add(scrollPane);
+		
 		forReplay.add(0, 0);
 		
 		//5$ chip
@@ -490,6 +498,8 @@ public class Main {
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(phase == 0) {
+					txtLog.append("Game Start!\n");
+					
 					anteBet = 0;
 					pairPlusBet = 0;
 					playBet = 0;
@@ -544,6 +554,7 @@ public class Main {
 					forReplay.add(0,0);
 					
 					if(anteBet > 0) {
+						txtLog.append("Ante was accepted\n");
 						lblHelper.setText("Input Pair+ Bet");
 						phase = 2;
 					}
@@ -599,7 +610,7 @@ public class Main {
 							loses++;
 						}
 						
-						money += rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
+						resultLog(txtLog);
 						lblBankBoard.setText(Integer.toString(money));
 						
 						if(money <= 0) {
@@ -660,6 +671,7 @@ public class Main {
 					lblGCard3.setVisible(true);
 					
 					lblHelper.setText("Fold or Play");
+					txtLog.append("Pair Plus is accepted");
 					phaseBet = false;
 					phase = 3;
 					
@@ -683,7 +695,7 @@ public class Main {
 							loses++;
 						}
 						
-						money += rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
+						resultLog(txtLog);
 						lblBankBoard.setText(Integer.toString(money));
 						
 						if(money <= 0) {
@@ -719,6 +731,8 @@ public class Main {
 					lblDealerHandBoard.setText(getStringResult(dealerResult));
 					
 					lblHelper.setText("You Folded Press Start");
+					
+					txtLog.append("Fold\n");
 					
 					lblAnteBoard.setText("0");
 					lblPairPlusBoard.setText("0");
@@ -776,7 +790,7 @@ public class Main {
 						loses++;
 					}
 					
-					money += rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
+					resultLog(txtLog);
 					lblBankBoard.setText(Integer.toString(money));
 					
 					if(money <= 0) {
@@ -856,6 +870,34 @@ public class Main {
 		}
 		
 		return forReturn;
+	}
+	
+	private void resultLog(JTextArea a) {
+		int[] pot = rule.pay(gamerResult, dealerResult, anteBet, playBet, pairPlusBet);
+		
+		if(pot[0] != 0) {
+			a.append("You Win!\nAnte +\n");
+			
+			if(pot[1] == playBet) {
+				a.append("Dealer's hand is not qualified\n");
+			}
+			else {
+				a.append("Play +\n");
+			}
+		}
+		else {
+			a.append("You Lose\n");
+		}
+		
+		if(pot[3] != 0) {
+			a.append("Pair Plus * " + Integer.toString(pot[3] / pairPlusBet - 1) + "+\n");
+		}
+		
+		if(pot[2] != 0) {
+			a.append("Ante Bonus * " + Integer.toString(pot[2] / anteBet) + "+\n");
+		}
+		
+		money += pot[0] + pot[1] + pot[2] + pot[3];
 	}
 	
 	private String getCardID(Card card) {

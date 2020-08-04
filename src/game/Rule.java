@@ -5,34 +5,39 @@ import game.card.Card;
 public class Rule {
 	private boolean win;
 	
-	public int pay(int[] gResult, int[] dResult, int anteBet, int playBet, int pairPlusBet) {
-		int pot = 0;
+	public int[] pay(int[] gResult, int[] dResult, int anteBet, int playBet, int pairPlusBet) {
+		int[] pot = new int[4]; // 0 = ante, 1 = play, 2 = ante bonus, 3 = pair plus
 		
 		if(win) {
 			//딜러 Nothing
 			if(dResult[2] == 0 && dResult[1] < 12) {
-				pot += anteBet * 2 + playBet;
+				pot[0] = anteBet * 2;
+				pot[1] = playBet;
 			}
 			//평소
 			else {
-				pot += anteBet * 2 + playBet * 2;
+				pot[0] = anteBet * 2;
+				pot[1] = playBet * 2;
 			}
 		}
 		
 		if(gResult[2] == 5) {
-			pot += pairPlusBet * 41 + anteBet * 5;
+			pot[3] = pairPlusBet * 41;
+			pot[2] = anteBet * 5;
 		}
 		else if(gResult[2] == 4) {
-			pot += pairPlusBet * 31 + anteBet * 4;
+			pot[3] = pairPlusBet * 31;
+			pot[2] = anteBet * 4;
 		}
 		else if(gResult[2] == 3) {
-			pot += pairPlusBet * 7 + anteBet * 1;
+			pot[3] = pairPlusBet * 7;
+			pot[2] = anteBet * 1;
 		}
 		else if(gResult[2] == 2) {
-			pot += pairPlusBet * 5;
+			pot[3] = pairPlusBet * 5;
 		}
 		else if(gResult[2] == 1) {
-			pot += pairPlusBet * 2;
+			pot[3] = pairPlusBet * 2;
 		}
 		
 		return pot;
