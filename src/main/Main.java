@@ -470,9 +470,6 @@ public class Main {
 					}
 					
 					games++;
-					System.out.println(games);
-					System.out.println(wins);
-					System.out.println(loses);
 					lblHelper.setText("Input Ante Bet");
 					phaseBet = true;
 					tempMoney = money;
@@ -583,7 +580,6 @@ public class Main {
 					
 					winningRate = (double)wins / (double)games * 100;
 					lblWinningRateBoard.setText(Double.toString(Math.round(winningRate * 10) / 10.0));
-					System.out.println(winningRate);
 					
 					if(money <= 0) {
 						JOptionPane.showMessageDialog(null, "YOU DON'T HAVE MONEY!");
@@ -663,7 +659,6 @@ public class Main {
 		
 		winningRate = (double)wins / (double)games * 100;
 		lblWinningRateBoard.setText(Double.toString(Math.round(winningRate * 10) / 10.0));
-		System.out.println(winningRate);
 		
 		phase = 0;
 	}
