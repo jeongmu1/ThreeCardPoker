@@ -20,34 +20,30 @@ import javax.swing.SwingConstants;
 
 import game.Rule;
 import game.card.Card;
-import game.card.CardDeck;
 import game.players.Dealer;
 import game.players.Gamer;
 
 public class Main {
-	int _pot = 0;
-	int phase = 0;
-	int money = 5000;
-	int tempMoney;
-	int anteBet = 0;
-	int pairPlusBet = 0;
-	int playBet = 0;
-	int wins = 0;
-	int loses = 0;
-	int games = 0;
-	double winningRate = 0;
-	int[] gamerResult;
-	int[] dealerResult;
-	String GHandResult;
-	String DHandResult;
-	boolean phaseBet = false;
-	boolean win;
-	CardDeck deck = new CardDeck();
-	Dealer dealer = new Dealer();
-	Gamer gamer = new Gamer();
-	Rule rule = new Rule();
+	private int _pot = 0;
+	private int phase = 0;
+	private int money = 5000;
+	private int tempMoney;
+	private int anteBet = 0;
+	private int pairPlusBet = 0;
+	private int playBet = 0;
+	private int wins = 0;
+	private int loses = 0;
+	private int games = 0;
+	private double winningRate = 0;
+	private int[] gamerResult;
+	private int[] dealerResult;
+	private boolean phaseBet = false;
+	private boolean win;
+	private Dealer dealer = new Dealer();
+	private Gamer gamer = new Gamer();
+	private Rule rule = new Rule();
 	
-	ArrayList<Integer> forReplay = new ArrayList<>();
+	private ArrayList<Integer> forReplay = new ArrayList<>();
 	
 	private JFrame frmThreeCardPoker;
 
@@ -70,7 +66,7 @@ public class Main {
 	/**
 	 * Create the application.
 	 */
-	public Main() {
+	private Main() {
 		initialize();
 	}
 
